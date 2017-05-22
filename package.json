@@ -1,0 +1,18 @@
+{
+  "name": "atest-mock-frontend",
+  "version": "0.1.0-alpha",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "dev": "tsc -p tsconfig.json --watch"
+  },
+  "author": "andycall",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript-starter": "^1.4.0"
+  },
+  "dependencies": {
+    "@types/node": "^7.0.18",
+    "typescript": "^2.3.2"
+  }
+}
