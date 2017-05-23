@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "outDir": "lib",
-    "rootDir": "src",
+    "rootDir": ".",
     "moduleResolution": "node",
     "module": "commonjs",
     "strictNullChecks": true,
