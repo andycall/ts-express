@@ -1,6 +1,9 @@
 /// <reference types="node" />
 
 import _debug = require('debug')
+import http = require('http')
+import net = require('net')
+
 const debug = _debug('express')
  
 export interface NextFunction {
@@ -11,11 +14,18 @@ export class ExpressBase {
     cache: Map<string, string>
     engines: Map<string, string>
     settings: Map<string, any>
+    _server: http.Server
 
     constructor() {
         this.cache = new Map<string, string>();
         this.engines = new Map<string, string>();
         this.settings = new Map<string, any>();
+    }
+
+    requestHandle(req: http.IncomingMessage, res: http.ServerResponse) {
+        console.log(req.url);
+        console.log('.....');
+        res.end('1234');
     }
 
     defaultConfiguration() {
@@ -111,5 +121,11 @@ export class ExpressBase {
      */
     disabled(key: string): boolean {
         return !this.settings.get(key);
+    }
+
+    listen(...args:any[]): net.Server {
+        this._server = http.createServer(this.requestHandle);
+
+        return this._server.listen.apply(this._server, args);
     }
 }

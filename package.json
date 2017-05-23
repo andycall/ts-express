@@ -4,8 +4,8 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "dev": "tsc -p tsconfig.json --watch",
-    "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register ./test --recursive"
+    "dev": "tsc -p tsconfig.json --watch --rootDir ./src",
+    "test": "mocha -t 10000000 --compilers ts:ts-node/register,tsx:ts-node/register ./test --recursive --rootDir ./"
   },
   "author": "andycall",
   "license": "MIT",

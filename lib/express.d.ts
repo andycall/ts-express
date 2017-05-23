@@ -1,7 +1,6 @@
 /// <reference types="node" />
 /**
- * Express port written by typescript
- *
+ * Express framework written by typescript
  */
 import { EventEmitter } from 'events';
 export declare class ExpressApp extends EventEmitter {

@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es6",
     "outDir": "lib",
-    "rootDir": ".",
     "moduleResolution": "node",
     "module": "commonjs",
     "strictNullChecks": true,
@@ -11,8 +10,8 @@
     "noImplicitAny" : true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "declaration": true,
     "importHelpers": true,
     "inlineSourceMap": true,
