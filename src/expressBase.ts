@@ -1,5 +1,5 @@
 /// <reference types="node" />
-
+import { EventEmitter } from 'events'
 import _debug = require('debug')
 import http = require('http')
 import net = require('net')
@@ -10,13 +10,14 @@ export interface NextFunction {
     (err?: any): void;
 }
 
-export class ExpressBase {
+export class ExpressBase extends EventEmitter {
     cache: Map<string, string>
     engines: Map<string, string>
     settings: Map<string, any>
     _server: http.Server
 
     constructor() {
+        super();
         this.cache = new Map<string, string>();
         this.engines = new Map<string, string>();
         this.settings = new Map<string, any>();
@@ -123,6 +124,10 @@ export class ExpressBase {
         return !this.settings.get(key);
     }
 
+    /**
+     * listening to a port
+     * @param args 
+     */
     listen(...args:any[]): net.Server {
         this._server = http.createServer(this.requestHandle);
 

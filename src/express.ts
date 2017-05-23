@@ -1,19 +1,16 @@
 /// <reference types="node" />
 /// <reference types="merge-descriptors"/>
 
-/**
- * Express framework written by typescript
- */
+import { ExpressBase } from './expressBase'
 
-
-import { EventEmitter } from 'events'
-
-export class ExpressApp extends EventEmitter {
-    
+export class Express extends ExpressBase {
+    constructor() {
+        super();
+    }
 }
 
 function createExpressApp() {
-    return new ExpressApp();
+    return new Express ();
 }
 
 export default createExpressApp;
