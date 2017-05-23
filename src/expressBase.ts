@@ -1,9 +1,8 @@
 /// <reference types="node" />
-import { EventEmitter } from 'events'
 import _debug = require('debug')
 import http = require('http')
 import net = require('net')
-
+import { EventEmitter } from 'events'
 const debug = _debug('express')
  
 export interface NextFunction {

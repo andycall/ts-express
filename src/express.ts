@@ -2,6 +2,7 @@
 /// <reference types="merge-descriptors"/>
 
 import { ExpressBase } from './expressBase'
+import { Server } from 'http'
 
 export class Express extends ExpressBase {
     constructor() {
@@ -10,7 +11,7 @@ export class Express extends ExpressBase {
 }
 
 function createExpressApp() {
-    return new Express ();
+    return new Express();
 }
 
 export default createExpressApp;
