@@ -1,7 +1,6 @@
 /// <reference types="node" />
 
 import { IncomingMessage } from 'http'
-import { inherits } from 'util'
 
 export interface ExpressRequest extends IncomingMessage {
     get(name: string): string
