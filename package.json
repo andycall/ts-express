@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "dev": "tsc -p tsconfig.json --watch --rootDir ./src",
+    "build": "tsc -p tsconfig.json --rootDir ./src",
     "test": "mocha -t 10000000 --compilers ts:ts-node/register,tsx:ts-node/register ./test --recursive --rootDir ./"
   },
   "author": "andycall",

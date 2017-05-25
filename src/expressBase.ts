@@ -3,6 +3,7 @@ import _debug = require('debug')
 import http = require('http')
 import net = require('net')
 import { EventEmitter } from 'events'
+import { ExpressRequest } from './request'
 const debug = _debug('express')
  
 export interface NextFunction {
@@ -23,8 +24,8 @@ export class ExpressBase extends EventEmitter {
     }
 
     requestHandle(req: http.IncomingMessage, res: http.ServerResponse) {
-        console.log(req.url);
-        console.log('.....');
+        let request = new ExpressRequest(req);
+        console.log(request.method);
         res.end('1234');
     }
 
