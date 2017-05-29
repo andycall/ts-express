@@ -1,33 +1,46 @@
 /// <reference types="node" />
 import { ExpressRequest } from '../request'
 import { ExpressResponse } from '../response'
+import { EventEmitter } from 'events'
 
 export interface NextFunction {
     (err?: any): void;
 }
 
 export interface RequestHandler {
-    (req: ExpressRequest, res: ExpressResponse, next: NextFunction): any;
+    (req: ExpressRequest, res: ExpressResponse, next?: NextFunction): any;
 }
 
-export class Router {
-    private stack: any[];
+type stackItem = {
+    method: string;
+    path: string;
+    handler: RequestHandler
+}
+
+export class Router extends EventEmitter {
+    private stacks: stackItem[];
 
     constructor() {
-        this.stack = [];
+        super();
+        this.stacks = [];
     }
 
     get(path: string, handler: RequestHandler) {
-        this.stack.push({
+        this.stacks.push({
             method: 'get',
             path: path,
             handler
         });
     }
-
-    emit(req: ExpressRequest, res: ExpressResponse) {
+ 
+    match(req: ExpressRequest, res: ExpressResponse) {
         let url = req.url;
 
-        console.log(url);        
+        for(let stack of this.stacks) {
+            let path = stack.path;
+            if (path === url) {
+                stack.handler(req, res);
+            }
+        }
     }
 }

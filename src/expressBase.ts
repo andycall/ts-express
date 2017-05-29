@@ -32,12 +32,7 @@ export class ExpressBase extends EventEmitter {
         return (req: http.IncomingMessage, res: http.ServerResponse) => {
             let request = new ExpressRequest(req, res);
             let response = new ExpressResponse(req, res);
-            // self.router.emit(request, response);
-            // response.end('helloworld');
-            // return this;
-            console.log(request.url);
-
-            response.end('1234567');
+            this.router.match(request, response);
         }
     }
 
