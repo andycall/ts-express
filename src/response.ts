@@ -10,15 +10,30 @@ export interface ExpressResponse extends ServerResponse {
 }
 
 export class ExpressResponse implements ExpressResponse {
-    private _req: IncomingMessage;
-    private _res: ServerResponse;
+    public _req: IncomingMessage;
+    public _res: ServerResponse;
+
+    private proxyHandler(target: any, propKey: PropertyKey) {
+        let returnValue = target[propKey];
+
+        // fix this direction
+        if (typeof returnValue === 'function') {
+            return returnValue.bind(target);
+        }
+
+        return returnValue;
+    }
 
     constructor(req: IncomingMessage, res: ServerResponse) {
-        this._res = res;
-        this._req = req;
+        this._req = new Proxy<IncomingMessage>(req, {
+            get: this.proxyHandler
+        });
 
-        // change the instance's prototype to http.ServerResponse
-        Object.setPrototypeOf(this, res);
+        this._res = new Proxy<ServerResponse>(res, {
+            get: this.proxyHandler
+        });
+
+        Object.setPrototypeOf(this, this._res);
     }
 
     status(code: number): ExpressResponse {
@@ -27,9 +42,6 @@ export class ExpressResponse implements ExpressResponse {
     }
 
     send(body: responseBody) {
-
-
         return this;
     }
-
 }

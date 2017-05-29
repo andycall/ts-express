@@ -4,8 +4,10 @@ import http = require('http')
 import net = require('net')
 import { EventEmitter } from 'events'
 import { ExpressRequest } from './request'
+import { ExpressResponse } from './response'
+import { Router } from './router/index'
 const debug = _debug('express')
- 
+
 export interface NextFunction {
     (err?: any): void;
 }
@@ -15,18 +17,28 @@ export class ExpressBase extends EventEmitter {
     engines: Map<string, string>
     settings: Map<string, any>
     _server: http.Server
+    router: Router
 
     constructor() {
         super();
         this.cache = new Map<string, string>();
         this.engines = new Map<string, string>();
         this.settings = new Map<string, any>();
+        this.router = new Router();
     }
 
-    requestHandle(req: http.IncomingMessage, res: http.ServerResponse) {
-        let request = new ExpressRequest(req);
-        console.log(request.method);
-        res.end('1234');
+    requestHandle() {
+        let self = this;
+        return (req: http.IncomingMessage, res: http.ServerResponse) => {
+            let request = new ExpressRequest(req, res);
+            let response = new ExpressResponse(req, res);
+            // self.router.emit(request, response);
+            // response.end('helloworld');
+            // return this;
+            console.log(request.url);
+
+            response.end('1234567');
+        }
     }
 
     defaultConfiguration() {
@@ -128,8 +140,8 @@ export class ExpressBase extends EventEmitter {
      * listening to a port
      * @param args 
      */
-    listen(...args:any[]): net.Server {
-        this._server = http.createServer(this.requestHandle);
+    listen(...args: any[]): net.Server {
+        this._server = http.createServer(this.requestHandle());
 
         return this._server.listen.apply(this._server, args);
     }

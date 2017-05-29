@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { IncomingMessage } from 'http'
+import { IncomingMessage, ServerResponse } from 'http'
 
 export interface ExpressRequest extends IncomingMessage {
     get(name: string): string
@@ -9,11 +9,23 @@ export interface ExpressRequest extends IncomingMessage {
 
 export class ExpressRequest implements ExpressRequest {
     private _req: IncomingMessage;
+    private _res: ServerResponse
 
-    constructor(req: IncomingMessage) {
-        this._req = req;
+    private proxyHandler(target: any, propKey: PropertyKey) {
+        let returnValue = target[propKey];
 
-        // change the instance's prototype to http.IncomingMessage
+        // fix this direction
+        if (typeof returnValue === 'function') {
+            return returnValue.bind(target);
+        }
+
+        return returnValue;
+    }
+
+    constructor(req: IncomingMessage, res: ServerResponse) {
+        this._req = new Proxy<IncomingMessage>(req, this.proxyHandler);
+        this._res = new Proxy<ServerResponse>(res, this.proxyHandler);
+        
         Object.setPrototypeOf(this, req);
     }
 
