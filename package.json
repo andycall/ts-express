@@ -1,6 +1,6 @@
 {
   "name": "atest-mock-frontend",
-  "version": "0.1.0-alpha",
+  "version": "0.1.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

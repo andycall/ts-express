@@ -27,13 +27,10 @@ export class ExpressBase extends EventEmitter {
         this.router = new Router();
     }
 
-    requestHandle() {
-        let self = this;
-        return (req: http.IncomingMessage, res: http.ServerResponse) => {
-            let request = new ExpressRequest(req, res);
-            let response = new ExpressResponse(req, res);
-            this.router.match(request, response);
-        }
+    requestHandle(req: http.IncomingMessage, res: http.ServerResponse) {
+        let request = new ExpressRequest(req, res);
+        let response = new ExpressResponse(req, res);
+        this.router.match(request, response);
     }
 
     defaultConfiguration() {
@@ -136,7 +133,7 @@ export class ExpressBase extends EventEmitter {
      * @param args 
      */
     listen(...args: any[]): net.Server {
-        this._server = http.createServer(this.requestHandle());
+        this._server = http.createServer(this.requestHandle);
 
         return this._server.listen.apply(this._server, args);
     }
