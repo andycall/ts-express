@@ -12,7 +12,7 @@ describe("res.status", () => {
     })
 
     it('res.status should return 200', (done) => {
-        supertest(app.requestHandle.bind(app))
+        supertest(app.requestHandle)
             .get('/').expect(200, done);
     })
 });

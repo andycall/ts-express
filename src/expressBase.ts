@@ -19,18 +19,20 @@ export class ExpressBase extends EventEmitter {
     _server: http.Server
     router: Router
 
+    requestHandle: (req: http.IncomingMessage, res: http.ServerResponse) => void;
+
     constructor() {
         super();
         this.cache = new Map<string, string>();
         this.engines = new Map<string, string>();
         this.settings = new Map<string, any>();
         this.router = new Router();
-    }
 
-    requestHandle(req: http.IncomingMessage, res: http.ServerResponse) {
-        let request = new ExpressRequest(req, res);
-        let response = new ExpressResponse(req, res);
-        this.router.match(request, response);
+        this.requestHandle = (req: http.IncomingMessage, res: http.ServerResponse) => {
+            let request = new ExpressRequest(req, res);
+            let response = new ExpressResponse(req, res);
+            this.router.match(request, response);
+        }
     }
 
     defaultConfiguration() {
