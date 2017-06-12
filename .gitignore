@@ -63,4 +63,3 @@ lib
 Use Case View/
 config/
 src/.DS_Store
-src/router/layer.ts
