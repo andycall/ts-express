@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import {IncomingMessage} from "http";
+import {IncomingMessage, ServerResponse} from "http";
 import {proxyGetter, proxySetter} from "./util";
 
 export interface ExpressRequest extends IncomingMessage {
@@ -8,7 +8,7 @@ export interface ExpressRequest extends IncomingMessage {
     header(name: string): string
 }
 
-export function ExpressRequest(req: IncomingMessage): ExpressRequest {
+export function ExpressRequest(req: IncomingMessage, res: ServerResponse): ExpressRequest {
     let request = <ExpressRequest>{
         header: function (name: string): string {
             if (!name) {

@@ -1,3 +1,5 @@
+import * as contentType from 'content-type'
+
 export function proxyGetter(target: any, propKey: PropertyKey) {
     let returnValue = target[propKey];
 
@@ -21,4 +23,24 @@ export function proxySetter(proxyTarget: any) {
 
         return true;
     }
+}
+
+export function isString(obj: any) {
+    return typeof obj === 'string';
+}
+
+export function toString(val: any) {
+    return Object.prototype.toString.call(val);
+}
+
+export function setCharset(mimeType: string, charset: string) {
+    if (!mimeType || !charset) {
+        return mimeType;
+    }
+
+    let parseInfo = contentType.parse(mimeType);
+
+    parseInfo.parameters.charset = charset;
+
+    return contentType.format(parseInfo);
 }

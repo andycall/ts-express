@@ -30,8 +30,8 @@ export class ExpressBase extends EventEmitter {
         this.router = new Router();
 
         this.requestHandle = (req: http.IncomingMessage, res: http.ServerResponse) => {
-            let request = ExpressRequest(req);
-            let response = ExpressResponse(res);
+            let request = ExpressRequest(req, res);
+            let response = ExpressResponse(req, res);
             let done = finalHandler(request, response);
             this.router.handle(request, response, done);
         }
