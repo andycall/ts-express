@@ -1,63 +1,61 @@
-/// <reference types="mocha" />
-import { ExpressRequest } from '../request'
-import { ExpressResponse } from '../response'
-import { EventEmitter } from 'events'
+/// <reference types="node" />
 
-export interface NextFunction {
-    (err?: any): void;
+import {BaseRouter, RequestHandler, PathParam, RequestHandlerParams,} from "./base";
+import {methods} from '../lib/methods';
+
+export interface IRouterHandler<T> {
+    (path: PathParam, ...handlers: RequestHandler[]): T;
+    (path: PathParam, ...handlers: RequestHandlerParams[]): T;
 }
 
-export interface RequestHandler {
-    (req: ExpressRequest, res: ExpressResponse, next?: NextFunction): any;
+export interface IRoute {
+    all: IRouterHandler<void>;
+    get: IRouterHandler<void>;
+    post: IRouterHandler<void>;
+    put: IRouterHandler<void>;
+    // delete: IRouterHandler<this>;
+    // patch: IRouterHandler<this>;
+    // options: IRouterHandler<this>;
+    // head: IRouterHandler<this>;
+    //
+    // checkout: IRouterHandler<this>;
+    // copy: IRouterHandler<this>;
+    // lock: IRouterHandler<this>;
+    // merge: IRouterHandler<this>;
+    // mkactivity: IRouterHandler<this>;
+    // mkcol: IRouterHandler<this>;
+    // move: IRouterHandler<this>;
+    // "m-search": IRouterHandler<this>;
+    // notify: IRouterHandler<this>;
+    // purge: IRouterHandler<this>;
+    // report: IRouterHandler<this>;
+    // search: IRouterHandler<this>;
+    // subscribe: IRouterHandler<this>;
+    // trace: IRouterHandler<this>;
+    // unlock: IRouterHandler<this>;
+    // unsubscribe: IRouterHandler<this>
 }
 
-type stackItem = {
-    method: string;
-    path: string;
-    handler: RequestHandler
-}
-
-type middleWareItem = {
-    path: string;
-    handler: RequestHandler
-}
-
-export class Router extends EventEmitter {
-    private stacks: stackItem[];
-    private middleware: middleWareItem[];
-
+export class Router extends BaseRouter implements IRoute {
     constructor() {
         super();
-        this.stacks = [];
-        this.middleware = [];
     }
 
-    use(path: string, handler: RequestHandler) {
-        this.middleware.push({
-            path,
-            handler
-        });
+    all(path: PathParam, ...callbacks: RequestHandler[]) {
+        this._use('*', path, callbacks);
     }
 
-    next() {}
-
-    get(path: string, handler: RequestHandler) {
-        this.stacks.push({
-            method: 'get',
-            path: path,
-            handler
-        });
+    get(path: PathParam, ...callbacks: RequestHandler[]) {
+        this._use('get', path, callbacks);
     }
- 
-    match(req: ExpressRequest, res: ExpressResponse) {
-        // middlware match
-        let url = req.url;
 
-        for(let stack of this.stacks) {
-            let path = stack.path;
-            if (path === url) {
-                stack.handler(req, res);
-            }
-        }
+    post(path: PathParam, ...callbacks: RequestHandler[]) {
+        this._use('post', path, callbacks);
     }
+
+    put(path: PathParam, ...callbacks: RequestHandler[]) {
+        this._use('put', path, callbacks);
+    }
+
+    // TODO other methods...
 }

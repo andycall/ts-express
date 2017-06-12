@@ -6,6 +6,7 @@ import { EventEmitter } from 'events'
 import { ExpressRequest } from './request'
 import { ExpressResponse } from './response'
 import { Router } from './router/index'
+import * as finalHandler from 'finalhandler'
 const debug = _debug('express')
 
 export interface NextFunction {
@@ -31,7 +32,8 @@ export class ExpressBase extends EventEmitter {
         this.requestHandle = (req: http.IncomingMessage, res: http.ServerResponse) => {
             let request = new ExpressRequest(req, res);
             let response = new ExpressResponse(req, res);
-            this.router.match(request, response);
+            let done = finalHandler(request, response);
+            this.router.handle(request, response, done);
         }
     }
 

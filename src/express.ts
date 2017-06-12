@@ -2,7 +2,6 @@
 /// <reference types="merge-descriptors"/>
 
 import { ExpressBase } from './expressBase'
-import { Server } from 'http'
 
 export class Express extends ExpressBase {
     constructor() {
