@@ -30,4 +30,28 @@ describe('app.router', () => {
                 done();
             });
     });
+
+    it('trigger with difference methods', (done) => {
+        const app = express();
+        let results: string[] = [];
+
+        const router = app.router;
+
+        router.get('/', function (req, res, next) {
+            results.push('get');
+            res.end('ends');
+        });
+
+        router.post('/', function (req, res, next) {
+            results.push('post');
+            res.end('ends');
+        });
+
+        supertest(app.requestHandle)
+            .post('/')
+            .end(function (res) {
+                assert.deepEqual(results, ['post']);
+                done();
+            })
+    });
 });

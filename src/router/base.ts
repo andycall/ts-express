@@ -77,10 +77,11 @@ export class BaseRouter extends EventEmitter {
             let baseUrl = BaseRouter._getRequestUrl(req);
             let match = null;
             let selectedLayer = null;
+            let method = req.method || '';
 
             while (!match && layerIndex < stack.length) {
                 selectedLayer = stack[layerIndex++];
-                match = selectedLayer.match(baseUrl);
+                match = selectedLayer.match(baseUrl, method);
             }
 
             if (!match || !selectedLayer) {

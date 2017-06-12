@@ -33,8 +33,21 @@ export class Layer {
         }
     }
 
-    match(path: string) {
+    matchMethod(method: string = '') {
+        if (this.method === '*') {
+            return true;
+        }
+
+        return this.method.toLowerCase() === method.toLowerCase();
+    }
+
+    match(path: string, method: string) {
         let match = null;
+        let isMethodMatch = this.matchMethod(method);
+
+        if (!isMethodMatch) {
+            return false;
+        }
 
         if (path !== null) {
             if (this.regexp_fast_star) {
