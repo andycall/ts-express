@@ -7,45 +7,30 @@ export interface ExpressRequest extends IncomingMessage {
     header(name: string): string
 }
 
-export class ExpressRequest implements ExpressRequest {
-    private _req: IncomingMessage;
-    private _res: ServerResponse
+export function ExpressRequest(req: IncomingMessage): ExpressRequest {
+    let request = <ExpressRequest>{
+        header: function (name: string): string {
+            if (!name) {
+                throw new TypeError('name arguments is required to req.get');
+            }
 
-    private proxyHandler(target: any, propKey: PropertyKey) {
-        let returnValue = target[propKey];
+            if (typeof name !== 'string') {
+                throw new TypeError('name must be string to req.get');
+            }
 
-        // fix this direction
-        if (typeof returnValue === 'function') {
-            return returnValue.bind(target);
+            let lowerCase = name.toLowerCase();
+
+            switch (lowerCase) {
+                case 'referer':
+                case 'referrer':
+                    return this.headers.referrer || this.headers.referer;
+                default:
+                    return this.headers[lowerCase];
+            }
         }
+    };
 
-        return returnValue;
-    }
+    Object.setPrototypeOf(request, req);
 
-    constructor(req: IncomingMessage, res: ServerResponse) {
-        this._req = new Proxy<IncomingMessage>(req, this.proxyHandler);
-        this._res = new Proxy<ServerResponse>(res, this.proxyHandler);
-        
-        Object.setPrototypeOf(this, req);
-    }
-
-    private getHeader(name: string) {
-        if (!name) {
-            throw new TypeError('name arguments is required to req.get');
-        }
-
-        if (typeof name !== 'string') {
-            throw new TypeError('name must be string to req.get');
-        }
-
-        let lowerCase = name.toLowerCase();
-
-        switch (lowerCase) {
-            case 'referer':
-            case 'referrer':
-                return this._req.headers.referrer || this._req.headers.referer;
-            default:
-                return this._req.headers[lowerCase];
-        }
-    }
+    return request;
 }

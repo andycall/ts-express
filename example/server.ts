@@ -4,14 +4,13 @@ const app = express();
 const router = app.router;
 
 router.use(function (req, res, next) {
-    next();
-});
+    try {
+        res.set('Content-Type', 'text/html');
+    }
+    catch (e) {
+    }
 
-router.get('/', (req, res, next) => {
-    res.write('1');
-    next();
-}, function (req, res) {
-    res.end('2');
+    res.end('1234');
 });
 
 app.listen(8090);
