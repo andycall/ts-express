@@ -24,11 +24,13 @@
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.18",
     "@types/path-to-regexp": "^1.7.0",
+    "@types/send": "^0.14.2",
     "@types/supertest": "^2.0.0",
     "debug": "^2.6.8",
     "finalhandler": "^1.0.3",
     "methods": "^1.1.2",
     "path-to-regexp": "^1.7.0",
+    "send": "^0.15.3",
     "supertest": "^3.0.0",
     "typescript": "^2.3.2"
   }
