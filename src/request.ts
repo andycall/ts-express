@@ -1,6 +1,7 @@
 /// <reference types="node" />
 
 import { IncomingMessage, ServerResponse } from 'http'
+import {proxyHandler} from './util'
 
 export interface ExpressRequest extends IncomingMessage {
     get(name: string): string
@@ -29,6 +30,11 @@ export function ExpressRequest(req: IncomingMessage): ExpressRequest {
             }
         }
     };
+
+    req = new Proxy<IncomingMessage>(req, {
+        get: proxyHandler,
+        set: proxyHandler
+    });
 
     Object.setPrototypeOf(request, req);
 

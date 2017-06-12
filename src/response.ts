@@ -2,6 +2,7 @@
 
 import {ServerResponse} from "http";
 import {mime} from "send";
+import {proxyHandler} from './util'
 
 export declare type responseBody = string | number | boolean | Buffer;
 
@@ -44,17 +45,6 @@ export function ExpressResponse(res: ServerResponse) {
             return this.getHeader(field);
         }
     };
-
-    function proxyHandler(target: any, propKey: PropertyKey) {
-        let returnValue = target[propKey];
-
-        // fix this direction
-        if (typeof returnValue === 'function') {
-            return returnValue.bind(target);
-        }
-
-        return returnValue;
-    }
 
     res = new Proxy<ServerResponse>(res, {
         get: proxyHandler,
