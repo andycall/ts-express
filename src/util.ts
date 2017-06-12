@@ -1,4 +1,4 @@
-export function proxyHandler(target: any, propKey: PropertyKey) {
+export function proxyGetter(target: any, propKey: PropertyKey) {
     let returnValue = target[propKey];
 
     // fix this direction
@@ -7,4 +7,18 @@ export function proxyHandler(target: any, propKey: PropertyKey) {
     }
 
     return returnValue;
+}
+
+export function proxySetter(proxyTarget: any) {
+
+    return (target: any, props: PropertyKey, value: any, receiver: any): boolean => {
+        Object.defineProperty(proxyTarget, props, {
+            value: value,
+            writable: true
+        });
+
+        target[props] = value;
+
+        return true;
+    }
 }

@@ -54,4 +54,18 @@ describe('app.router', () => {
                 done();
             })
     });
+
+    it('should return 404 response with no match found', (done) => {
+        const app = express();
+        const router = app.router;
+
+        router.get('/helloworld', function (req, res, next) {
+            console.log('will not trigger');
+        });
+
+        supertest(app.requestHandle)
+            .get('/')
+            .expect(404)
+            .end(done);
+    });
 });

@@ -2,7 +2,7 @@
 
 import {ServerResponse} from "http";
 import {mime} from "send";
-import {proxyHandler} from './util'
+import {proxyGetter, proxySetter} from './util'
 
 export declare type responseBody = string | number | boolean | Buffer;
 
@@ -47,11 +47,14 @@ export function ExpressResponse(res: ServerResponse) {
     };
 
     res = new Proxy<ServerResponse>(res, {
-        get: proxyHandler,
-        set: proxyHandler
+        get: proxyGetter
     });
 
     Object.setPrototypeOf(response, res);
+
+    response = new Proxy<ExpressResponse>(response, {
+        set: proxySetter(res)
+    });
 
     return response;
 }
