@@ -3,18 +3,35 @@ import express from '../src/express'
 import * as supertest from 'supertest'
 
 describe('res', () => {
-    describe('.send()', () => {
-        it('should set body to ""', done => {
+    describe('.send(nil)', () => {
+        [undefined, null].forEach(i => {
+            it('should set body to ""', done => {
+                const app = express();
+                const router = app.router;
+
+                router.use((req, res, next) => {
+                    res.send()
+                });
+
+                supertest(app.requestHandle)
+                    .get('/')
+                    .expect(200, '', done);
+            })
+        });
+    });
+
+    describe('.send(string)', () => {
+        it('should send as html', done => {
             const app = express();
-            const router = app.router;
+            let router = app.router;
 
             router.use((req, res, next) => {
-                res.end()
-            });
+                res.send('<p>helloworld</p>')
+            })
 
             supertest(app.requestHandle)
                 .get('/')
-                .expect(200, '', done);
+                .expect(200, '<p>helloworld</p>', done)
         })
     })
 });

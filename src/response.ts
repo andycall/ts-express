@@ -4,11 +4,11 @@ import {IncomingMessage, ServerResponse} from "http";
 import {mime} from "send";
 import {proxyGetter, proxySetter, isString, setCharset, toString} from "./util";
 
-export declare type responseBody = string | number | boolean | Buffer;
+export declare type responseBody = string | number | boolean | Buffer | null;
 
 export interface ExpressResponse extends ServerResponse {
     status(code: number): ExpressResponse;
-    send(body: responseBody): ExpressResponse;
+    send(body?: responseBody): ExpressResponse;
     set(field: string, val: string): ExpressResponse;
     header(field: string, val: string): ExpressResponse;
     get(field: string): string;
@@ -47,12 +47,12 @@ export function ExpressResponse(req: IncomingMessage, res: ServerResponse) {
             return this.getHeader(field);
         },
 
-        send(chunk: responseBody) {
+        send(chunk?: responseBody) {
             let encoding = 'utf-8';
 
             switch (typeof chunk) {
                 case 'string':
-                    if (this.get('Content-Type')) {
+                    if (!this.get('Content-Type')) {
                         this.setContentType('html');
                     }
                     let type = this.get('Content-Type');
@@ -77,11 +77,11 @@ export function ExpressResponse(req: IncomingMessage, res: ServerResponse) {
 
             if (chunk) {
                 if (!Buffer.isBuffer(chunk)) {
-                    chunk = Buffer.from(Object.prototype.toString.call(chunk), encoding);
+                    chunk = Buffer.from(chunk.toString(), encoding);
                 }
 
                 let len = chunk.length;
-                this.set('Content-Length', toString(len));
+                this.set('Content-Length', len.toString());
             }
 
             let statusCode = this.statusCode;

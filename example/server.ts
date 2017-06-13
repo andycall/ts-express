@@ -4,13 +4,7 @@ const app = express();
 const router = app.router;
 
 router.use(function (req, res, next) {
-    try {
-        res.set('Content-Type', 'text/html');
-    }
-    catch (e) {
-    }
-
-    res.end('1234');
+    res.send('<p>helloworld</p>')
 });
 
 app.listen(8090);
