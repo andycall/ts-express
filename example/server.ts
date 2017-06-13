@@ -4,7 +4,8 @@ const app = express();
 const router = app.router;
 
 router.use(function (req, res, next) {
-    res.send('<p>helloworld</p>')
+    res.set('Content-Type', 'text/html; charset=gbk2312');
+    res.send(Buffer.from('helloworld'))
 });
 
 app.listen(8090);

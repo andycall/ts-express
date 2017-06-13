@@ -68,8 +68,10 @@ export function ExpressResponse(req: IncomingMessage, res: ServerResponse) {
                 case 'object':
                     if (chunk == null) {
                         chunk = ''
-                    } else if (Buffer.isBuffer(chunk) && !this.get('Content-Type')) {
-                        this.setContentType('bin')
+                    } else if (Buffer.isBuffer(chunk)) {
+                        if (!this.get('Content-Type')) {
+                            this.setContentType('bin')
+                        }
                     } else {
                         return this.json(chunk)
                     }
