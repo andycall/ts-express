@@ -4,7 +4,7 @@ import {IncomingMessage, ServerResponse} from "http";
 import {mime} from "send";
 import {proxyGetter, proxySetter, isString, setCharset, toString} from "./util";
 
-export declare type responseBody = string | number | boolean | Buffer | null;
+export declare type responseBody = string | number | boolean | Buffer | null | any;
 
 export interface ExpressResponse extends ServerResponse {
     status(code: number): ExpressResponse;
@@ -107,7 +107,7 @@ export function ExpressResponse(req: IncomingMessage, res: ServerResponse) {
         json(obj: any): ExpressResponse {
             let str = JSON.stringify(obj);
 
-            if (this.get('Content-Type')) {
+            if (!this.get('Content-Type')) {
                 this.set('Content-Type', 'application/json');
             }
 

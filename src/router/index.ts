@@ -13,6 +13,7 @@ export interface IRoute {
     get: IRouterHandler<void>;
     post: IRouterHandler<void>;
     put: IRouterHandler<void>;
+    head: IRouterHandler<void>;
     // delete: IRouterHandler<this>;
     // patch: IRouterHandler<this>;
     // options: IRouterHandler<this>;
@@ -55,6 +56,10 @@ export class Router extends BaseRouter implements IRoute {
 
     put(path: PathParam, ...callbacks: RequestHandler[]) {
         this._use('put', path, callbacks);
+    }
+
+    head(path: PathParam, ...callbacks: RequestHandler[]) {
+        this._use('head', path, callbacks);
     }
 
     // TODO other methods...
