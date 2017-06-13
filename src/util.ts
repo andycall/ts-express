@@ -44,3 +44,7 @@ export function setCharset(mimeType: string, charset: string) {
 
     return contentType.format(parseInfo);
 }
+
+export function logerror(err: Error) {
+    console.error(err.stack || err.toString());
+}

@@ -8,6 +8,7 @@ import { ExpressResponse } from './response'
 import { Router } from './router/index'
 import * as finalHandler from 'finalhandler'
 const debug = _debug('express')
+import {logerror} from './util'
 
 export interface NextFunction {
     (err?: any): void;
@@ -32,7 +33,9 @@ export class ExpressBase extends EventEmitter {
         this.requestHandle = (req: http.IncomingMessage, res: http.ServerResponse) => {
             let request = ExpressRequest(req, res);
             let response = ExpressResponse(req, res);
-            let done = finalHandler(request, response);
+            let done = finalHandler(request, response, {
+                onerror: logerror
+            });
             this.router.handle(request, response, done);
         }
     }

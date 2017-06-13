@@ -68,9 +68,9 @@ export class BaseRouter extends EventEmitter {
 
         next();
 
-        function next() {
+        function next(err?: Error) {
             if (layerIndex >= stack.length) {
-                setImmediate(done);
+                setImmediate(done, err);
                 return;
             }
 
@@ -85,10 +85,16 @@ export class BaseRouter extends EventEmitter {
             }
 
             if (!match || !selectedLayer) {
-                return done();
+                return done(err);
             }
 
-            selectedLayer.handler_request(req, res, next);
+            if (err) {
+                selectedLayer.handleError(req, res, err);
+            }
+            else {
+                selectedLayer.handleRequest(req, res, next);
+            }
+
         }
     }
 

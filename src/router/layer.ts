@@ -25,12 +25,24 @@ export class Layer {
         this.handler = fn;
     }
 
-    handler_request(req: ExpressRequest, res: ExpressResponse, next: NextFunction) {
+    handleRequest(req: ExpressRequest, res: ExpressResponse, next: NextFunction) {
         try {
             this.handler(req, res, next);
         } catch (e) {
-            finalHandler(req, res);
+            if (process.env.NODE_DEBUG !== 'production') {
+                console.error(e);
+            }
+
+            finalHandler(req, res)(e);
         }
+    }
+
+    handleError(req: ExpressRequest, res: ExpressResponse, err: Error) {
+        if (process.env.NODE_DEBUG !== 'production') {
+            console.error(err);
+        }
+        console.log(err);
+        finalHandler(req, res)(err);
     }
 
     matchMethod(method: string = '') {
