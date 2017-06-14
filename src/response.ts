@@ -10,7 +10,7 @@ export declare type responseBody = string | number | boolean | Buffer | null | a
 export interface ExpressResponse extends ServerResponse {
     status(code: number): ExpressResponse;
     send(body?: responseBody): ExpressResponse;
-    set(field: string, val: string): ExpressResponse;
+    set(field: string, val: string | number | string[] | number[]): ExpressResponse;
     header(field: string, val: string): ExpressResponse;
     get(field: string): string;
     json(obj: any): ExpressResponse;
@@ -28,14 +28,25 @@ export function ExpressResponse(this: ExpressBase, req: IncomingMessage, res: Se
             return this;
         },
 
-        set(field: string, val: string) {
+        set(field: string, val: string | string[] | any[]) {
             if (field.toLowerCase() === 'content-type') {
+                if (Array.isArray(val)) {
+                    throw new TypeError('Content-Type cannot be set to an Array')
+                }
+
                 if (!charsetRegExp.test(val)) {
                     let charset = mime.charsets.lookup(val.split(';')[0]);
                     if (charset) {
-                        val += `; charset=${charset.toLowerCase()}`;
+                        val += '; charset=' + charset.toLowerCase();
                     }
                 }
+            }
+
+            if (Array.isArray(val)) {
+                val = Array.prototype.map.call(val, String);
+            }
+            else {
+                val = String(val);
             }
 
             this.setHeader(field, val);
