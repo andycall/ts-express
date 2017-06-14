@@ -15,10 +15,12 @@ export interface NextFunction {
 }
 
 export class ExpressBase extends EventEmitter {
-    cache: Map<string, string>
-    engines: Map<string, string>
-    settings: Map<PropertyKey, any>
-    _server: http.Server
+    cache: Map<string, string>;
+    engines: Map<string, string>;
+    settings: Map<PropertyKey, any>;
+    _server: http.Server;
+    request: ExpressRequest;
+    response: ExpressResponse;
     router: Router
 
     requestHandle: (req: http.IncomingMessage, res: http.ServerResponse) => void;
@@ -31,8 +33,8 @@ export class ExpressBase extends EventEmitter {
         this.router = new Router();
 
         this.requestHandle = (req: http.IncomingMessage, res: http.ServerResponse) => {
-            let request = ExpressRequest.call(this, req, res);
-            let response = ExpressResponse.call(this, req, res);
+            let request = this.request = ExpressRequest.call(this, req, res);
+            let response = this.response = ExpressResponse.call(this, req, res);
             let done = finalHandler(request, response, {
                 onerror: logerror
             });
@@ -43,7 +45,6 @@ export class ExpressBase extends EventEmitter {
     defaultConfiguration() {
         let env = process.env.NODE_ENV || 'development';
 
-        // TODO etag
         // TODO query parser
         // TODO subdomain offset
         // TODO trust proxy

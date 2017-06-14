@@ -29,6 +29,7 @@
     "@types/supertest": "^2.0.0",
     "content-type": "^1.0.2",
     "debug": "^2.6.8",
+    "encodeurl": "^1.0.1",
     "finalhandler": "^1.0.3",
     "methods": "^1.1.2",
     "path-to-regexp": "^1.7.0",

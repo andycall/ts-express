@@ -1,9 +1,11 @@
 /// <reference types="node" />
+/// <reference path="./index.d.ts" />
 
 import {IncomingMessage, ServerResponse} from "http";
 import {mime} from "send";
 import {proxyGetter, proxySetter, isString, setCharset} from "./util";
 import {ExpressBase} from './expressBase'
+import * as encodeurl from 'encodeurl'
 
 export declare type responseBody = string | number | boolean | Buffer | null | any;
 
@@ -15,6 +17,7 @@ export interface ExpressResponse extends ServerResponse {
     get(field: string): string;
     json(obj: any): ExpressResponse;
     setContentType(t: string): ExpressResponse;
+    redirect(url: string, status?: number): ExpressBase;
     app: ExpressBase
 }
 
@@ -134,6 +137,23 @@ export function ExpressResponse(this: ExpressBase, req: IncomingMessage, res: Se
                 : t;
 
             return this.set('Content-Type', ct);
+        },
+
+        redirect(url: string, status: number = 302) {
+            url = encodeurl(url);
+
+            this.set('Location', url);
+            this.statusCode = status;
+
+            let body = `<p>${status} Redirecting to <a href="${url}">${url}</a></p>`
+
+            this.set('Content-Length', Buffer.byteLength(body));
+
+            if (this.app.request.method === 'HEAD') {
+                this.end();
+            } else {
+                this.end(body);
+            }
         }
     };
 
