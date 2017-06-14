@@ -17,7 +17,7 @@ export interface NextFunction {
 export class ExpressBase extends EventEmitter {
     cache: Map<string, string>
     engines: Map<string, string>
-    settings: Map<string, any>
+    settings: Map<PropertyKey, any>
     _server: http.Server
     router: Router
 
@@ -31,8 +31,8 @@ export class ExpressBase extends EventEmitter {
         this.router = new Router();
 
         this.requestHandle = (req: http.IncomingMessage, res: http.ServerResponse) => {
-            let request = ExpressRequest(req, res);
-            let response = ExpressResponse(req, res);
+            let request = ExpressRequest.call(this, req, res);
+            let response = ExpressResponse.call(this, req, res);
             let done = finalHandler(request, response, {
                 onerror: logerror
             });
@@ -89,7 +89,7 @@ export class ExpressBase extends EventEmitter {
      * @return {*} 
      * @public
      */
-    get(key: string): any {
+    get(key: PropertyKey): any {
         return this.settings.get(key);
     }
 

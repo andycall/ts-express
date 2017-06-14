@@ -2,7 +2,8 @@
 
 import {IncomingMessage, ServerResponse} from "http";
 import {mime} from "send";
-import {proxyGetter, proxySetter, isString, setCharset, toString} from "./util";
+import {proxyGetter, proxySetter, isString, setCharset} from "./util";
+import {ExpressBase} from './expressBase'
 
 export declare type responseBody = string | number | boolean | Buffer | null | any;
 
@@ -13,13 +14,15 @@ export interface ExpressResponse extends ServerResponse {
     header(field: string, val: string): ExpressResponse;
     get(field: string): string;
     json(obj: any): ExpressResponse;
-    setContentType(t: string): ExpressResponse
+    setContentType(t: string): ExpressResponse;
+    app: ExpressBase
 }
 
 const charsetRegExp = /;\s*charset\s*=/;
 
-export function ExpressResponse(req: IncomingMessage, res: ServerResponse) {
+export function ExpressResponse(this: ExpressBase, req: IncomingMessage, res: ServerResponse) {
     let response = <ExpressResponse>{
+        app: this,
         status(code: number): ExpressResponse {
             this.statusCode = code;
             return this;
